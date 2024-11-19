@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -10,6 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.example.smartlight"
         minSdk = 24
+        //noinspection EditedTargetSdkVersion
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -59,7 +61,13 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation (libs.com.firebaseui.firebase.ui.auth)
+    implementation (libs.facebook.android.sdk)
     implementation(libs.androidx.navigation.compose)
+    implementation (libs.facebook.android.sdk.vlatestrelease)
+    implementation (libs.facebook.login)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

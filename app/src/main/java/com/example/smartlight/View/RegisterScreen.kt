@@ -1,4 +1,4 @@
-package com.example.smartlight.Screens
+package com.example.smartlight.View
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
