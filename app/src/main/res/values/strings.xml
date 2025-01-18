@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SmartLight</string>
+    <string name="facebook_auth_code">0aba20426c919ca97b09a92fa36310a2</string>
+    <string name="facebook_application_id">588850760229772</string>
 </resources>

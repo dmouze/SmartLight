@@ -1,52 +1,37 @@
 package com.example.smartlight
 
-import android.net.Uri
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.smartlight.View.PhilipsHueOAuth
-import com.example.smartlight.View.SmartLightScreen
+import androidx.navigation.compose.rememberNavController
+import com.example.smartlight.View.RegisterScreen
+import com.google.firebase.auth.FirebaseAuth
 
-class YourActivity : ComponentActivity() {
+class RegisterActivity : ComponentActivity() {
+
+    private val fbAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Obsługa przekierowania z URI w `onCreate`
-        intent?.data?.let { uri ->
-            handleRedirectUri(uri)
-        }
-
         setContent {
-            SmartLightScreen()
+            RegisterScreen(navController = rememberNavController())
         }
     }
 
-    private fun handleRedirectUri(uri: Uri) {
-        val authCode = uri.getQueryParameter("code")
-        if (authCode != null) {
-            PhilipsHueOAuth.getAccessToken(
-                authCode = authCode,
-                redirectUri = "myapp://callback",
-                onSuccess = { token ->
-                    saveAccessToken(token)
-                },
-                onError = { error ->
-                    showError(error)
-                }
-            )
-        }
+    override fun onStart() {
+        super.onStart()
+        isCurrentUser()
     }
 
-    private fun saveAccessToken(token: String) {
-        val sharedPreferences = getSharedPreferences("auth", MODE_PRIVATE)
-        sharedPreferences.edit().putString("access_token", token).apply()
-    }
+   private fun isCurrentUser() {
+       fbAuth.currentUser?.let { auth ->
+           val intent = Intent(applicationContext, MainActivity::class.java).apply {
+               flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+           }
+           startActivity(intent)
+       }
+   }
 
-    private fun showError(error: String) {
-        runOnUiThread {
-            Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
-        }
-    }
 }

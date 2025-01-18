@@ -52,7 +52,9 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.compose.color.picker.vlatestversion)
+    implementation(libs.material3)
+    implementation(libs.okhttp)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -68,6 +70,7 @@ dependencies {
     implementation (libs.facebook.login)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.androidx.runtime.saved.instance.state)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

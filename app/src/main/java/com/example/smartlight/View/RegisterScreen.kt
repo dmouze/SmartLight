@@ -1,25 +1,29 @@
 package com.example.smartlight.View
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.smartlight.Viewmodel.SmartLightViewModel
 
 @Composable
-fun RegisterScreen(navController: NavController) {
-    var name by remember { mutableStateOf("") }
+fun RegisterScreen(navController: NavController, viewModel: SmartLightViewModel = viewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    val context = navController.context
+    val errorMessage by viewModel.errorMessage
 
     Scaffold(
-        containerColor = Colors.White,
-        contentColor = Colors.Black
+        containerColor = Color.White,
+        contentColor = Color.Black
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -32,106 +36,52 @@ fun RegisterScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    text = "Zarejestruj się",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = Colors.Black
-                )
-
-                Box(modifier = Modifier.padding(16.dp))
-
-                TextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Imię i nazwisko", color = Colors.Gray) },
-                    singleLine = true,
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = Colors.White,
-                        focusedTextColor = Colors.White,
-                        unfocusedTextColor = Colors.Gray,
-                        focusedContainerColor = Colors.Black,
-                        unfocusedContainerColor = Colors.Black,
-                        focusedIndicatorColor = Colors.Blue.copy(alpha = 0.9f),
-                        unfocusedIndicatorColor = Colors.White.copy(alpha = 0.3f),
-                    )
-                )
+                Text("Zarejestruj się", style = MaterialTheme.typography.headlineLarge, color = Color.Black)
 
                 TextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("E-mail", color = Colors.Gray) },
-                    singleLine = true,
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = Colors.White,
-                        focusedTextColor = Colors.White,
-                        unfocusedTextColor = Colors.Gray,
-                        focusedContainerColor = Colors.Black,
-                        unfocusedContainerColor = Colors.Black,
-                        focusedIndicatorColor = Colors.Blue.copy(alpha = 0.9f),
-                        unfocusedIndicatorColor = Colors.White.copy(alpha = 0.3f),
-                    )
+                    label = { Text("E-mail") },
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 TextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Hasło", color = Colors.Gray) },
-                    singleLine = true,
-                    shape = RoundedCornerShape(10.dp),
+                    label = { Text("Hasło") },
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = Colors.White,
-                        focusedTextColor = Colors.White,
-                        unfocusedTextColor = Colors.Gray,
-                        focusedContainerColor = Colors.Black,
-                        unfocusedContainerColor = Colors.Black,
-                        focusedIndicatorColor = Colors.Blue.copy(alpha = 0.9f),
-                        unfocusedIndicatorColor = Colors.White.copy(alpha = 0.3f),
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 TextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    label = { Text("Potwierdź hasło", color = Colors.Gray) },
-                    singleLine = true,
-                    shape = RoundedCornerShape(10.dp),
+                    label = { Text("Potwierdź hasło") },
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = Colors.White,
-                        focusedTextColor = Colors.White,
-                        unfocusedTextColor = Colors.Gray,
-                        focusedContainerColor = Colors.Black,
-                        unfocusedContainerColor = Colors.Black,
-                        focusedIndicatorColor = Colors.Blue.copy(alpha = 0.9f),
-                        unfocusedIndicatorColor = Colors.White.copy(alpha = 0.3f),
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Button(
-                    onClick = { /* Logika rejestracji */ },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Colors.Black,
-                        contentColor = Colors.White
-                    ),
+                    onClick = {
+                        viewModel.registerUser(email, password, confirmPassword, context) { success ->
+                            if (success) {
+                                navController.navigate("login")
+                            }
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Zarejestruj się")
                 }
 
                 TextButton(
-                    onClick = {navController.navigate("login")},
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = Colors.Gray
-                    )
+                    onClick = { navController.navigate("login") },
                 ) {
                     Text("Masz już konto? Zaloguj się")
+                }
+
+                errorMessage?.let {
+                    Text("Błąd: $it", color = MaterialTheme.colorScheme.error)
                 }
             }
         }
