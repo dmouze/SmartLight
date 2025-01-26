@@ -12,15 +12,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.smartlight.View.LoginScreen
 import com.example.smartlight.View.RegisterScreen
+import com.example.smartlight.View.WebViewScreen
 import com.example.smartlight.View.SmartLightScreen
 import com.example.smartlight.View.UserSettingsScreen
-import com.example.smartlight.View.WebViewScreen
 import com.facebook.CallbackManager
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 
 private lateinit var callbackManager: CallbackManager
 
+@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +44,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent.let { handleOAuthCallback(it) }
+        handleOAuthCallback(intent)
     }
 
     private fun handleOAuthCallback(intent: Intent) {
         val data: Uri? = intent.data
         if (data != null && data.toString().startsWith("myapp://callback")) {
-            val authCode = data.getQueryParameter("code") // Pobierz kod autoryzacyjny
+            data.getQueryParameter("code") // Pobierz kod autoryzacyjny
         }
     }
 
@@ -58,13 +59,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNav() {
     val navController = rememberNavController()
-    val authCode = navController.currentBackStackEntry
+    navController.currentBackStackEntry
         ?.savedStateHandle
         ?.getLiveData<String>("authCode")
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController) }
         composable("register") { RegisterScreen(navController) }
-        composable("smartLightScreen") { SmartLightScreen(navController, authCode?.value) }
+        composable("smartLightScreen") { SmartLightScreen(navController) }
         composable("settings") { UserSettingsScreen(navController) }
         composable("webViewScreen/{authUrl}") { backStackEntry ->
             val authUrl = backStackEntry.arguments?.getString("authUrl") ?: ""

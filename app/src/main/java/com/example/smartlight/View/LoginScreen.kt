@@ -54,12 +54,7 @@ fun LoginScreen(navController: NavController, viewModel: SmartLightViewModel = v
 
                 Button(
                     onClick = {
-                        viewModel.signInWithEmailAndPassword(email, password, context) { user ->
-                            if (user != null) {
-                                Toast.makeText(context, "Zalogowano: ${user.email}", Toast.LENGTH_SHORT).show()
                                 navController.navigate("smartLightScreen")
-                            }
-                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
